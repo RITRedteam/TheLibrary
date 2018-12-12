@@ -3,32 +3,29 @@
 <h1 style="text-align:center">The Library</h1>
 <head>
 <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+<link rel="shortcut icon" href="{{ url_for('static',filename='images/favicon.ico') }}" />
 </head>
 <body>
 
-<div id="menu">
-<ul>
-  <li>
+<div class="topnav">
     <a href="/" {% if url_for(request.endpoint) == '/' %} class="active" {% endif %}>
       Home
-    </a>
-  </li>
-  <li>
     <a href="/upload" {% if url_for(request.endpoint) == '/upload' %} class="active" {% endif %}>
       Upload
     </a>
-  </li>
-  <li>
     <a href="/link_gen" {% if url_for(request.endpoint) == '/link_gen' %} class="active" {% endif %}>
       Link Generation
     </a>
-  </li>
-  <li>
     <a href="/link_table" {% if url_for(request.endpoint) == '/link_table' %} class="active" {% endif %}>
       Link Table
     </a>
-  </li>
-</ul>
+    <div class="topnav-right">
+        {% if COOKIE_KEY in request.cookies and request.cookies[COOKIE_KEY] == COOKIE_VALUE %}
+            <a href="/logout" style="float: right;" class="active">
+                Logout
+            </a>
+        {% endif %}
+    </div>
 </div>
 <br />
 

@@ -16,13 +16,4 @@
   Timeout (seconds - 0 means none): <input type=text name=timeout value="0"> <br />
   <input type=submit value=Generate!>
 </form>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul class="flashes">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
 {% endblock %}
