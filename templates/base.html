@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<div id="menu">
+<div style="text-align: center" id="menu">
 <ul class="menu">
   <li>
     <a href="/" {% if url_for(request.endpoint) == '/' %} class="active" {% endif %}>
@@ -21,6 +21,11 @@
   <li>
     <a href="/link_gen" {% if url_for(request.endpoint) == '/link_gen' %} class="active" {% endif %}>
       Link Generation
+    </a>
+  </li>
+  <li>
+    <a href="/link_table" {% if url_for(request.endpoint) == '/link_table' %} class="active" {% endif %}>
+      Link Table
     </a>
   </li>
 </ul>

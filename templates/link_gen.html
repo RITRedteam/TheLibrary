@@ -3,6 +3,17 @@
 {% block page %}
 <form method=post enctype=multipart/form-data>
   Proposed Link: <input type=text name=link value="{{ gen_rand_str() }}"> <br />
+  Real File: <select name="real_file">
+                      {% for file in files %}
+                      <option value="{{file}}">{{file}}</option>
+                      {% endfor %}
+                    </select> <br />
+  Number of Clicks: <select name="clicks">
+                      {% for i in range(1,16) %}
+                      <option value="{{i}}">{{i}}</option>
+                      {% endfor %}
+                    </select> <br />
+  Timeout (seconds - 0 means none): <input type=text name=timeout value="0"> <br />
   <input type=submit value=Generate!>
 </form>
 {% with messages = get_flashed_messages() %}
@@ -13,4 +24,5 @@
             {% endfor %}
         </ul>
     {% endif %}
-{% endwith %}{% endblock %}
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block page %}
+<div style="text-align: center">
+{% if link_map|length > 0 %}
+<table align="center" border="1">
+  <tr>
+    <th>URL Link</th>
+    <th>File</th>
+    <th>Clicks</th>
+    <th>Timeout</th>
+  </tr>
+  {% for url, link in link_map.items() %}
+  <tr>
+   <td>/{{url}}</td>
+   <td>{{link.filename}}</td>
+   <td>{{link.clicks}}</td>
+   <td>{{link.timeout | ctime }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+No Links Generated Yet...
+{% endif %}
+</div>
+{% endblock %}
