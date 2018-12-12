@@ -1,4 +1,4 @@
-from flask import abort, redirect
+from flask import abort, send_file
 
 import os
 import time
@@ -15,4 +15,4 @@ class Link():
         if self.clicks < 1 or self.timeout < time.time():
             return abort(404)
         self.clicks -= 1
-        return redirect(self.filename)
+        return send_file('files/'+self.filename)
