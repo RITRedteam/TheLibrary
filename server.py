@@ -19,7 +19,7 @@ app.jinja_env.globals.update(gen_rand_str=gen_rand_str)
 
 @app.template_filter('ctime')
 def timectime(s):
-    if s > time.time() + 3500000:
+    if s == 0.0:
         return "Never"
     return time.ctime(s)
 
@@ -28,6 +28,7 @@ def timectime(s):
 def main(req_path):
     # BASIC directory traversal mitigation
     if ".." in req_path:
+        time.sleep(35)
         return abort(400)
 
     # Joining the base and the requested path
@@ -36,6 +37,7 @@ def main(req_path):
     # Return 404 if path doesn't exist
     if not os.path.exists(abs_path):
         if req_path not in link_map:
+            time.sleep(35)
             return abort(404)
 
     # Check if path is a file and serve
@@ -71,7 +73,7 @@ def link_table():
     global link_map
     expired_links = []
     for url, link in link_map.items():
-        if link.timeout < time.time():
+        if link.timeout < time.time() and link.timeout != 0.0:
             expired_links.append(url)
         if link.clicks < 1:
             expired_links.append(url)
@@ -100,4 +102,4 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80)

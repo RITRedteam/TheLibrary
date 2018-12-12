@@ -1,5 +1,8 @@
+#menu{
+  text-align: center;
+}
+
 #menu ul {
-  display: inline-block;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -21,7 +24,7 @@
 }
 
 #menu li a:hover {
-  background-color: #111111;
+  background-color: red;
 }
 
 #menu .active {
