@@ -23,9 +23,21 @@ def timectime(s):
         return "Never"
     return time.ctime(s)
 
+def clean_map():
+    global link_map
+    expired_links = []
+    for url, link in link_map.items():
+        if link.timeout < time.time() and link.timeout != 0.0:
+            expired_links.append(url)
+        if link.clicks < 1:
+            expired_links.append(url)
+    for expired_link in expired_links:
+        del link_map[expired_link]
+
 @app.route('/', defaults={'req_path': ''})
 @app.route('/<req_path>')
 def main(req_path):
+    clean_map()
     # BASIC directory traversal mitigation
     if ".." in req_path:
         time.sleep(35)
@@ -70,15 +82,7 @@ def link_gen():
 
 @app.route('/link_table')
 def link_table():
-    global link_map
-    expired_links = []
-    for url, link in link_map.items():
-        if link.timeout < time.time() and link.timeout != 0.0:
-            expired_links.append(url)
-        if link.clicks < 1:
-            expired_links.append(url)
-    for expired_link in expired_links:
-        del link_map[expired_link]
+    clean_map()
     return render_template('link_table.html', link_map=link_map)
 
 @app.route('/upload', methods=['GET', 'POST'])
