@@ -1,0 +1,32 @@
+<!doctype html>
+<title>The Library</title>
+<h1 style="text-align:center">The Library</h1>
+<head>
+<link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+</head>
+<body>
+
+<div id="menu">
+<ul class="menu">
+  <li>
+    <a href="/" {% if url_for(request.endpoint) == '/' %} class="active" {% endif %}>
+      Home
+    </a>
+  </li>
+  <li>
+    <a href="/upload" {% if url_for(request.endpoint) == '/upload' %} class="active" {% endif %}>
+      Upload
+    </a>
+  </li>
+  <li>
+    <a href="/link_gen" {% if url_for(request.endpoint) == '/link_gen' %} class="active" {% endif %}>
+      Link Generation
+    </a>
+  </li>
+</ul>
+</div>
+<br />
+
+{% block page %}{% endblock %}
+
+</body>

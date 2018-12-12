@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block page %}
+<form method=post enctype=multipart/form-data>
+  Proposed Link: <input type=text name=link value="{{ gen_rand_str() }}"> <br />
+  <input type=submit value=Generate!>
+</form>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}{% endblock %}
