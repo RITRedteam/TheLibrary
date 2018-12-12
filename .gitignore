@@ -1,3 +1,6 @@
 venv/
-files/*
+files/
+__pycache__/
+
+
 !files/.gitkeep
