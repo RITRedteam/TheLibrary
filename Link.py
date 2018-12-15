@@ -19,5 +19,3 @@ class Link():
         self.clicks -= 1
         return send_file('files/'+self.filename)
 
-    def __str__(self):
-        return f"File: {self.filename}, Clicks: {self.clicks}, Timeout: {time.ctime(self.timeout)}"

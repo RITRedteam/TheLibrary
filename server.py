@@ -21,7 +21,7 @@ COOKIE_KEY
 link_map = {}
 
 def gen_rand_str():
-    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=25))
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
 app.jinja_env.globals.update(gen_rand_str=gen_rand_str)
 app.jinja_env.globals.update(COOKIE_KEY=COOKIE_KEY)
 app.jinja_env.globals.update(COOKIE_VALUE=COOKIE_VALUE)
@@ -31,6 +31,13 @@ def timectime(s):
     if s == 0.0:
         return "Never"
     return time.ctime(s)
+
+@app.after_request
+def set_response_headers(response):
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 def clean_map():
     global link_map
@@ -43,36 +50,42 @@ def clean_map():
     for expired_link in expired_links:
         del link_map[expired_link]
 
-@app.route('/', defaults={'req_path': ''})
-@app.route('/<req_path>')
-def main(req_path):
+@app.route('/l/<req_path>')
+def file_handler(req_path):
     clean_map()
+    striped_path = req_path.replace("l/", "")
     # BASIC directory traversal mitigation
     if ".." in req_path:
         time.sleep(35)
         return abort(400)
-    if req_path == 'favicon.ico':
-        return redirect(url_for('static',filename='images/favicon.ico'))
-
     # Joining the base and the requested path
     abs_path = 'files/' + req_path
-
     # Return 404 if path doesn't exist
     if not os.path.exists(abs_path):
         if req_path not in link_map:
             time.sleep(35)
             return abort(404)
-
+    print(link_map[striped_path].clicks)
     # Check if path is a file and serve
-    if req_path in link_map and os.path.isfile('files/' + link_map[req_path].filename):
-        return link_map[req_path].send_file()
+    if striped_path in link_map and os.path.isfile('files/' + link_map[striped_path].filename):
+        return link_map[striped_path].send_file()
+
+    time.sleep(35)
+    abort(400)
+
+@app.route('/', defaults={'req_path': ''})
+@app.route('/<req_path>')
+def main(req_path):
+    abs_path = 'files/' + req_path
+    if req_path == 'favicon.ico':
+        return redirect(url_for('static',filename='images/favicon.ico'))
 
     if COOKIE_KEY in request.cookies and request.cookies[COOKIE_KEY] == COOKIE_VALUE:
         if os.path.isfile(abs_path):
             return send_file(abs_path)
     
         # Show directory contents
-        files = os.listdir(abs_path)
+        files = os.listdir('files/')
         files.remove('.gitkeep')
         return render_template('index.html', files=files)
     return redirect(url_for('login'))
