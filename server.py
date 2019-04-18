@@ -12,16 +12,17 @@ app = Flask(__name__)
 app.secret_key = b'i dont care about this key'
 
 
-USERNAME = 'admin'
-PASSWORD = 'password'
-COOKIE_KEY = 'redteam-cookie'
-COOKIE_VALUE = 'super-secret'
+USERNAME = os.environ.get("LIBRARY_USER", 'admin')
+PASSWORD = os.environ.get("LIBRARY_PASS", 'password')
+COOKIE_KEY = os.environ.get("LIBRARY_COOKIE_KEY", 'redteam-cookie')
+COOKIE_VALUE = os.environ.get("LIBRARY_COOKIE_VAL", 'super-secret')
 
 COOKIE_KEY
 link_map = {}
 
 def gen_rand_str():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
+
 app.jinja_env.globals.update(gen_rand_str=gen_rand_str)
 app.jinja_env.globals.update(COOKIE_KEY=COOKIE_KEY)
 app.jinja_env.globals.update(COOKIE_VALUE=COOKIE_VALUE)
@@ -158,4 +159,12 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    host = os.environ.get("FLASK_HOST", "0.0.0.0")
+    try:
+        port = os.environ.get("FLASK_PORT", "5000")
+        port = int(port)
+    except ValueError:
+        port = 5000
+    debug = os.environ.get("FLASK_DEBUG", "True")
+    debug = debug.lower().strip() in ["true", "yes", "1", "t"]
+    app.run(debug=debug, host=host, port=port)
