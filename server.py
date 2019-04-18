@@ -17,7 +17,7 @@ PASSWORD = os.environ.get("LIBRARY_PASS", 'password')
 COOKIE_KEY = os.environ.get("LIBRARY_COOKIE_KEY", 'redteam-cookie')
 COOKIE_VALUE = os.environ.get("LIBRARY_COOKIE_VAL", 'super-secret')
 
-link_map = {}
+link_map = {}  # Mapp all the URLS to Link Objects
 
 def gen_rand_str():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
@@ -40,13 +40,20 @@ def set_response_headers(response):
     return response
 
 def clean_map():
+    """This function cleans up the link mappings.
+    The following links are removed:
+        - Links for files that have been deleted
+        - Links that have timed out
+        - Links that have been clicked too many times
+    
+    """
     global link_map
     expired_links = []
+    # Find all the links that are invalid
     for url, link in link_map.items():
-        if link.timeout < time.time() and link.timeout != 0.0:
+        if not link.validate():
             expired_links.append(url)
-        if link.clicks < 1:
-            expired_links.append(url)
+    # Remove all the urls
     for expired_link in expired_links:
         del link_map[expired_link]
 
