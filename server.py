@@ -11,13 +11,12 @@ import time
 app = Flask(__name__)
 app.secret_key = b'i dont care about this key'
 
-
+# Load secrets from the env.
 USERNAME = os.environ.get("LIBRARY_USER", 'admin')
 PASSWORD = os.environ.get("LIBRARY_PASS", 'password')
 COOKIE_KEY = os.environ.get("LIBRARY_COOKIE_KEY", 'redteam-cookie')
 COOKIE_VALUE = os.environ.get("LIBRARY_COOKIE_VAL", 'super-secret')
 
-COOKIE_KEY
 link_map = {}
 
 def gen_rand_str():
@@ -125,7 +124,8 @@ def link_gen():
             link_map[link] = new_link
             redirect(request.url)
         files = os.listdir('files/')
-        files.remove('.gitkeep')
+        if '.gitkeep' in files: files.remove('.gitkeep')
+        
         return render_template('link_gen.html', files=files)
     return redirect(url_for('login'))
 
