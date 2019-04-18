@@ -87,7 +87,7 @@ def main(req_path):
     
         # Show directory contents
         files = os.listdir('files/')
-        files.remove('.gitkeep')
+        if '.gitkeep' in files: files.remove('.gitkeep')
         return render_template('index.html', files=files)
     return redirect(url_for('login'))
 
